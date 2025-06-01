@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Postoperative Care System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .phone-container {
+            width: 375px;
+            height: 812px;
+            background: white;
+            border-radius: 25px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .screen {
+            width: 100%;
+            height: 100%;
+            display: none;
+            flex-direction: column;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        .header {
+            background: #e91e63;
+            color: white;
+            padding: 60px 20px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .login-form {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #e91e63;
+        }
+
+        .btn {
+            background: #e91e63;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .btn:hover {
+            background: #c2185b;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .operation-card {
+            background: white;
+            border: 2px solid #f0f0f0;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+
+        .operation-card:hover {
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            transform: translateY(-2px);
+        }
+
+        .operation-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .operation-date {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .dropdown-menu {
+            display: none;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 10px;
+            margin-top: 10px;
+        }
+
+        .dropdown-menu.active {
+            display: block;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-bottom: 5px;
+        }
+
+        .menu-item:hover {
+            background: white;
+        }
+
+        .menu-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 12px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .questionnaire-icon {
+            background: #4caf50;
+            color: white;
+        }
+
+        .diet-icon {
+            background: #ff9800;
+            color: white;
+        }
+
+        .rehab-icon {
+            background: #2196f3;
+            color: white;
+        }
+
+        .question-group {
+            margin-bottom: 25px;
+        }
+
+        .question {
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .slider-container {
+            margin: 20px 0;
+        }
+
+        .slider {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: #e0e0e0;
+            appearance: none;
+            outline: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #e91e63;
+            cursor: pointer;
+        }
+
+        .slider-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .radio-item {
+            display: flex;
+            align-items: center;
+        }
+
+        .radio-item input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        .textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 16px;
+            resize: vertical;
+        }
+
+        .success-screen {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: #4caf50;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: white;
+            font-size: 40px;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 70px;
+            left: 20px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: rgba(255,255,255,0.3);
+            margin: 10px 20px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: white;
+            width: 0%;
+            transition: width 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-container">
+        <!-- Login Screen -->
+        <div class="screen active" id="login-screen">
+            <div class="header">
+                <h1>1177 Vårdguiden</h1>
+                <p>Postoperativ uppföljning</p>
+            </div>
+            <div class="content">
+                <div class="login-form">
+                    <div class="input-group">
+                        <label>Personnummer</label>
+                        <input type="text" placeholder="YYYYMMDD-XXXX" id="personal-number">
+                    </div>
+                    <button class="btn" onclick="showScreen('operations-screen')">Logga in med e-ID</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Operations List Screen -->
+        <div class="screen" id="operations-screen">
+            <div class="header">
+                <button class="back-btn" onclick="showScreen('login-screen')">←</button>
+                <h1>Mina operationer</h1>
+                <p>Välj operation för uppföljning</p>
+            </div>
+            <div class="content">
+                <div class="operation-card">
+                    <div class="operation-title">Appendektomi</div>
+                    <div class="operation-date">15 januari 2023</div>
+                    <button class="btn btn-secondary" onclick="toggleDropdown('dropdown1')">Visa alternativ ▼</button>
+                    <div class="dropdown-menu" id="dropdown1">
+                        <div class="menu-item" onclick="showScreen('questionnaire-screen')">
+                            <div class="menu-icon questionnaire-icon">📋</div>
+                            <span>Frågeformulär</span>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-icon diet-icon">🍎</div>
+                            <span>Kostråd</span>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-icon rehab-icon">💪</div>
+                            <span>Rehabilitering</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="operation-card">
+                    <div class="operation-title">Gallbladderoperation</div>
+                    <div class="operation-date">28 december 2022</div>
+                    <button class="btn btn-secondary" onclick="toggleDropdown('dropdown2')">Visa alternativ ▼</button>
+                    <div class="dropdown-menu" id="dropdown2">
+                        <div class="menu-item">
+                            <div class="menu-icon questionnaire-icon">📋</div>
+                            <span>Frågeformulär</span>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-icon diet-icon">🍎</div>
+                            <span>Kostråd</span>
+                        </div>
+                        <div class="menu-item">
+                            <div class="menu-icon rehab-icon">💪</div>
+                            <span>Rehabilitering</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Questionnaire Selection Screen -->
+        <div class="screen" id="questionnaire-screen">
+            <div class="header">
+                <button class="back-btn" onclick="showScreen('operations-screen')">←</button>
+                <h1>Uppföljningsformulär</h1>
+                <p>Välj längd på formulär</p>
+            </div>
+            <div class="content">
+                <button class="btn" onclick
